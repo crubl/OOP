@@ -1,0 +1,60 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:GraphEditor.ViewModels"
+        xmlns:cp="using:Avalonia.Controls"
+        xmlns:models="using:GraphEditor.Models"
+        x:Class="GraphEditor.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="Графический редактор"
+        Width="1000" Height="700">
+
+    <Grid RowDefinitions="Auto,*">
+        <!-- инструменты -->
+        <Border Grid.Row="0" Background="#F0F0F0" Padding="8" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+
+                <!-- Кнопки инструментов -->
+                <RadioButton Content="✏ Карандаш" GroupName="Tools"
+                             IsChecked="{Binding ActiveToolType, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static models:DrawingToolType.Pencil}}"
+                             Command="{Binding SelectToolCommand}" CommandParameter="Pencil"/>
+                <RadioButton Content="／ Линия" GroupName="Tools"
+                             IsChecked="{Binding ActiveToolType, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static models:DrawingToolType.Line}}"
+                             Command="{Binding SelectToolCommand}" CommandParameter="Line"/>
+                <RadioButton Content="▭ Прямоугольник" GroupName="Tools"
+                             IsChecked="{Binding ActiveToolType, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static models:DrawingToolType.Rectangle}}"
+                             Command="{Binding SelectToolCommand}" CommandParameter="Rectangle"/>
+                <RadioButton Content="◯ Эллипс" GroupName="Tools"
+                             IsChecked="{Binding ActiveToolType, Converter={x:Static ObjectConverters.Equal}, ConverterParameter={x:Static models:DrawingToolType.Ellipse}}"
+                             Command="{Binding SelectToolCommand}" CommandParameter="Ellipse"/>
+
+                <Separator Width="1" Background="#CCCCCC" Margin="8,0"/>
+
+                <!-- Цвет -->
+                <TextBlock Text="Цвет:" VerticalAlignment="Center" Foreground="Black"/>
+                <cp:ColorPicker Color="{Binding SelectedColor, Mode=TwoWay}" Width="120" Height="35"/>
+
+                <Separator Width="1" Background="#CCCCCC" Margin="8,0"/>
+
+                <!-- Толщина -->
+                <TextBlock Text="Толщина:" VerticalAlignment="Center" Foreground="Black"/>
+                <Slider Width="150" Minimum="1" Maximum="20"
+                        Value="{Binding Thickness, Mode=TwoWay}"/>
+                <TextBlock Text="{Binding Thickness}" Foreground="Black" VerticalAlignment="Center" Width="30"/>
+
+                <Separator Width="1" Background="#CCCCCC" Margin="8,0"/>
+
+                <!-- Команды -->
+                <Button Content="Очистить холст" Command="{Binding ClearCommand}"/>
+                <Button Content="Сохранить" Command="{Binding SaveCommand}"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Холст -->
+        <Border Grid.Row="1" Background="White" Margin="8" BorderBrush="Gray" BorderThickness="1">
+            <Canvas Name="DrawingCanvas" Background="White"
+                    PointerPressed="CanvasOnPointerPressed"
+                    PointerMoved="CanvasOnPointerMoved"
+                    PointerReleased="CanvasOnPointerReleased"/>
+        </Border>
+    </Grid>
+</Window>
